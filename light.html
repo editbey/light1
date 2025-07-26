@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çevre Dostu Aydınlatma Hesaplayıcı</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f9f4;
+            color: #333;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #2e7d32;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #2e7d32;
+            color: white;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #388e3c;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+        }
+    </style>
+</head>
+<body>
+    <h1>Çevre Dostu Aydınlatma Hesaplayıcı</h1>
+    <div class="container">
+        <label for="bulbType">Ampul Türü Seçin:</label>
+        <select id="bulbType">
+            <option value="60">İncandescent (60W)</option>
+            <option value="15">CFL (15W)</option>
+            <option value="10">LED (10W)</option>
+        </select>
+
+        <label for="bulbCount">Evdeki Ampul Sayısı:</label>
+        <input type="number" id="bulbCount" min="1" value="5">
+
+        <label for="hours">Günlük Kullanım Saati:</label>
+        <input type="number" id="hours" min="1" max="24" value="5">
+
+        <button onclick="calculate()">Hesapla</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            const bulbPower = parseFloat(document.getElementById("bulbType").value);
+            const bulbCount = parseInt(document.getElementById("bulbCount").value);
+            const hours = parseFloat(document.getElementById("hours").value);
+
+            // Günlük, Aylık Enerji Tüketimi (kWh)
+            const dailyEnergy = (bulbPower * bulbCount * hours) / 1000;
+            const monthlyEnergy = dailyEnergy * 30;
+
+            // 2050 hedefi: kişi başı günlük 1 kWh altı
+            const meetsTarget = dailyEnergy < 1;
+
+            // Ampul önerisi
+            let suggestion = "";
+            if (bulbPower >= 60) {
+                suggestion = "LED ampule geçmeniz %80'e kadar enerji tasarrufu sağlar.";
+            } else if (bulbPower >= 15) {
+                suggestion = "CFL yerine LED kullanmak %30 daha az enerji harcar.";
+            } else {
+                suggestion = "Zaten LED kullanıyorsunuz. Günlük kullanım süresini azaltabilirsiniz.";
+            }
+
+            document.getElementById("result").innerHTML = `
+                <strong>Günlük Enerji Tüketimi:</strong> ${dailyEnergy.toFixed(2)} kWh<br>
+                <strong>Aylık Enerji Tüketimi:</strong> ${monthlyEnergy.toFixed(2)} kWh<br>
+                <strong>2050 Hedefine Uygun mu?</strong> ${meetsTarget ? "✅ Evet" : "❌ Hayır"}<br>
+                <strong>Öneri:</strong> ${suggestion}
+            `;
+        }
+    </script>
+</body>
+</html>
